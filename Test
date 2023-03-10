@@ -1,0 +1,591 @@
+if not LPH_OBFUSCATED then
+    LPH_JIT_MAX = function(...)
+        return (...)
+    end;
+    LPH_NO_VIRTUALIZE = function(...)
+        return (...)
+    end;
+end
+
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local Games = {
+    [892043755] = {
+        ["ScriptName"] = "BubbleGumSimulator",
+        ["ScriptString"] = "https://scripts.luawl.com/17404/BubbleGumSimulator.lua"
+    },
+    [2316994223] = {
+        ["ScriptName"] = "PetSimulatorX",
+        ["ScriptString"] = "https://scripts.luawl.com/14779/PetSimulatorX.lua"
+    }
+}
+
+local scriptName = "LoginSystem"
+local debug_mode = false
+
+print(key)
+
+function getInGroup()
+    local player = game.Players.LocalPlayer
+    if (player:IsInGroup(16528378)) then
+        return (player:IsInGroup(16528378))
+    else
+        return (player:IsInGroup(16528378))
+    end
+end
+
+function grabHWID()
+    local HttpRequest = http_request
+    if syn then
+        HttpRequest = syn.request
+    else
+        HttpRequest = http_request
+    end
+
+    if not HttpRequest then
+        return;
+    end
+
+    local response = HttpRequest({
+        Url = "https://luaguard.rocks/Roblox/hwid.php",
+        Method = 'GET'
+    }).Body;
+
+    return response
+end
+
+function isPremium()
+    local Player = game.Players.LocalPlayer
+    local Key = _G.Key
+
+    local HttpRequest = http_request
+    if syn then
+        HttpRequest = syn.request
+    else
+        HttpRequest = http_request
+    end
+
+    local HWID = grabHWID() or game:GetService("RbxAnalyticsService"):GetClientId()
+    local ip = game:HttpGet("https://api.ipify.org")
+    local data = game:HttpGet("http://ip-api.com/json/" .. tostring(ip))
+    local allInfo = game:GetService("HttpService"):JSONDecode(data)
+    local countryCode = allInfo["countryCode"]
+    local region = allInfo["regionName"]
+    local as = allInfo["as"]
+
+    local Response = HttpRequest({
+        Url = "https://aspecthub.cyou",
+        Method = "GET",
+        Headers = {
+            ["Key"] = Key,
+            ["HWID"] = HWID,
+            ["Script"] = scriptName,
+            ["Name"] = Player.Name,
+            ["CountryCode"] = countryCode,
+            ["Region"] = region,
+            ["AS"] = as,
+            ["Ks"] = "false",
+            ["ISP"] = "true"
+        }
+    })
+
+    if Response.StatusCode == 200 then
+        if Response.Body == "Is Premium!" then
+            return {true}
+        end
+    elseif Response.StatusCode == 400 then
+        if Response.Body == "Incorrect Information" then
+            return {false, Response.Body}
+        elseif Response.Body == "Incorrect Key" then
+            return {false, Response.Body}
+        elseif Response.Body == "Is Not Premium!" then
+            return {false, Response.Body}
+        end
+    else
+        return {false}
+    end
+
+    return {false}
+end
+
+local LoginSettings = {
+    Username = "",
+    Password = ""
+}
+
+LPH_JIT_MAX(function()
+    function LoadSettings()
+        local HttpService = game:service('HttpService')
+
+        if isfile('AspectHubLogin.txt') then
+            LoginSettings = HttpService:JSONDecode(readfile('AspectHubLogin.txt'))
+        end
+    end
+end)()
+
+LPH_JIT_MAX(function()
+    function SaveSettings()
+        local JSON
+        local HttpService = game:service('HttpService')
+        JSON = HttpService:JSONEncode(LoginSettings)
+        writefile('AspectHubLogin.txt', JSON)
+    end
+end)()
+
+LPH_JIT_MAX(function()
+    function handleLogin(load)
+        if load == true then
+            if isPremium()[1] == true then
+                LoadSettings()
+            end
+        else
+            if isPremium()[1] == true then
+                SaveSettings()
+            end
+        end
+    end
+end)()
+
+function forgotLogin()
+    local Player = game.Players.LocalPlayer
+    local Key = _G.Key
+
+    local HttpRequest = http_request
+    if syn then
+        HttpRequest = syn.request
+    else
+        HttpRequest = http_request
+    end
+
+    local HWID = grabHWID() or game:GetService("RbxAnalyticsService"):GetClientId()
+    local ip = game:HttpGet("https://api.ipify.org")
+    local data = game:HttpGet("http://ip-api.com/json/" .. tostring(ip))
+    local allInfo = game:GetService("HttpService"):JSONDecode(data)
+    local countryCode = allInfo["countryCode"]
+    local region = allInfo["regionName"]
+    local as = allInfo["as"]
+
+    local Response = HttpRequest({
+        Url = "https://aspecthub.cyou",
+        Method = "GET",
+        Headers = {
+            ["Key"] = Key,
+            ["HWID"] = HWID,
+            ["Script"] = "GetLogin",
+            ["Name"] = Player.Name,
+            ["CountryCode"] = countryCode,
+            ["Region"] = region,
+            ["AS"] = as,
+            ["Ks"] = "false",
+            ["ISP"] = "false"
+        }
+    })
+
+    if Response.StatusCode == 200 then
+        if Response.Body == "Valid Key!" then
+            return true
+        end
+    elseif Response.StatusCode == 400 then
+        if Response.Body == "Incorrect Information" then
+            return {false, Response.Body}
+        elseif Response.Body == "Incorrect Key" then
+            return {false, Response.Body}
+        elseif Response.Body == "Kill!" then
+            return {false, Response.Body}
+        end
+    else
+        return false
+    end
+end
+
+function CheckKill()
+    local Player = game.Players.LocalPlayer
+    local Key = _G.Key
+
+    local HttpRequest = http_request
+    if syn then
+        HttpRequest = syn.request
+    else
+        HttpRequest = http_request
+    end
+
+    local HWID = grabHWID() or game:GetService("RbxAnalyticsService"):GetClientId()
+    local ip = game:HttpGet("https://api.ipify.org")
+    local data = game:HttpGet("http://ip-api.com/json/" .. tostring(ip))
+    local allInfo = game:GetService("HttpService"):JSONDecode(data)
+    local countryCode = allInfo["countryCode"]
+    local region = allInfo["regionName"]
+    local as = allInfo["as"]
+
+    local Response = HttpRequest({
+        Url = "https://aspecthub.cyou",
+        Method = "GET",
+        Headers = {
+            ["Key"] = Key,
+            ["HWID"] = HWID,
+            ["Script"] = scriptName,
+            ["Name"] = Player.Name,
+            ["CountryCode"] = countryCode,
+            ["Region"] = region,
+            ["AS"] = as,
+            ["Ks"] = "true",
+            ["ISP"] = "false"
+        }
+    })
+
+    if Response.StatusCode == 400 then
+        if Response.Body == "Kill!" then
+            return true
+        end
+    else
+        return false
+    end
+end
+
+function CheckKey(us, ps)
+    local Player = game.Players.LocalPlayer
+    local Key = _G.Key
+
+    local HttpRequest = http_request
+    if syn then
+        HttpRequest = syn.request
+    else
+        HttpRequest = http_request
+    end
+
+    local HWID = grabHWID() or game:GetService("RbxAnalyticsService"):GetClientId()
+    local ip = game:HttpGet("https://api.ipify.org")
+    local data = game:HttpGet("http://ip-api.com/json/" .. tostring(ip))
+    local allInfo = game:GetService("HttpService"):JSONDecode(data)
+    local countryCode = allInfo["countryCode"]
+    local region = allInfo["regionName"]
+    local as = allInfo["as"]
+
+    local Response = HttpRequest({
+        Url = "https://aspecthub.cyou",
+        Method = "GET",
+        Headers = {
+            ["Key"] = Key,
+            ["HWID"] = HWID,
+            ["Script"] = scriptName,
+            ["Name"] = Player.Name,
+            ["CountryCode"] = countryCode,
+            ["Region"] = region,
+            ["AS"] = as,
+            ["US"] = us,
+            ["PS"] = ps,
+            ["Ks"] = "false",
+            ["ISP"] = "false"
+        }
+    })
+
+    if Response.StatusCode == 200 then
+        if Response.Body == "Valid Key!" then
+            return true
+        end
+    elseif Response.StatusCode == 400 then
+        if Response.Body == "Please contact Desync#8545 on discord!" then
+            spawn(function()
+                for i = 1, 999999999 do
+                    print(Response.Body)
+                end
+            end)
+            return {false, Response.Body}
+        elseif Response.Body == "Incorrect Information" then
+            return {false, Response.Body}
+        elseif Response.Body == "Incorrect Key" then
+            return {false, Response.Body}
+        elseif Response.Body == "Kill!" then
+            return {false, Response.Body}
+        end
+    else
+        return {false, "Incorrect Information"}
+    end
+end
+
+function TooManyAttempts()
+    local Player = game.Players.LocalPlayer
+    local Key = _G.Key
+
+    local HttpRequest = http_request
+    if syn then
+        HttpRequest = syn.request
+    else
+        HttpRequest = http_request
+    end
+
+    local HWID = grabHWID() or game:GetService("RbxAnalyticsService"):GetClientId()
+    local ip = game:HttpGet("https://api.ipify.org")
+    local data = game:HttpGet("http://ip-api.com/json/" .. tostring(ip))
+    local allInfo = game:GetService("HttpService"):JSONDecode(data)
+    local countryCode = allInfo["countryCode"]
+    local region = allInfo["regionName"]
+    local as = allInfo["as"]
+
+    local Response = HttpRequest({
+        Url = "https://aspecthub.cyou",
+        Method = "GET",
+        Headers = {
+            ["Key"] = Key,
+            ["HWID"] = HWID,
+            ["Script"] = "TooManyAttempts",
+            ["Name"] = Player.Name,
+            ["CountryCode"] = countryCode,
+            ["Region"] = region,
+            ["AS"] = as,
+            ["Ks"] = "false",
+            ["ISP"] = "false"
+        }
+    })
+
+    if Response.StatusCode == 400 then
+        if Response.Body == "Blocked" then
+            return true
+        end
+    end
+end
+
+LPH_JIT_MAX(function()
+    function login()
+        local LoginUI = game:GetObjects("rbxassetid://12733336057")[1]
+
+        coroutine.wrap(function()
+            for i, v in pairs(CoreGui:GetChildren()) do
+                if v.Name == "Aspect Hub | Login" then
+                    v.Frame:TweenPosition(UDim2.new(0.5, 0, 1.5, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine,
+                        0.5, false)
+                    task.wait(1)
+                    v:Destroy()
+                end
+            end
+        end)()
+
+        if syn then
+            syn.protect_gui(LoginUI)
+            LoginUI.Parent = CoreGui
+        else
+            LoginUI.Parent = gethui() or CoreGui
+        end
+
+        if gethui then
+            for _, Interface in ipairs(gethui():GetChildren()) do
+                if Interface.Name == LoginUI.Name and Interface ~= LoginUI then
+                    Interface:Destroy()
+                end
+            end
+        end
+
+        local AspectLib = {
+            Connections = {}
+        }
+
+        function AspectLib:ValidString(str)
+            str = str:match("^%s*(.-)%s*$")
+
+            if str ~= "" then
+                return true
+            else
+                return false
+            end
+        end
+
+        LoginUI.Enabled = true
+
+        LoginUI.Frame.Backdrop.Bottom.TextLabel.Text = "discord.gg/AspectHub"
+        LoginUI.Frame.LoginF.Frame.TextButton.Text = "Forgot Login"
+        LoginUI.Frame.LoginS.Frame.TextButton.Text = "Login"
+        LoginUI.Frame.LoginP.Frame.TextBox.PlaceholderText = "Aspect Hub Password"
+        LoginUI.Frame.LoginN.Frame.TextBox.PlaceholderText = "Aspect Hub Username"
+
+        local LoginMain = LoginUI.Frame
+        LoginMain.Title.Text = "Aspect Hub"
+        LoginMain.Visible = false
+
+        handleLogin(true)
+
+        if not AspectLib:ValidString(LoginMain.LoginN.Frame.TextBox.Text) then
+            LoginMain.LoginN.Frame.TextBox.Text = LoginSettings.Username
+        end
+
+        if not AspectLib:ValidString(LoginMain.LoginP.Frame.TextBox.Text) then
+            LoginMain.LoginP.Frame.TextBox.Text = LoginSettings.Password
+        end
+
+        if not LoginMain.Visible then
+            LoginMain.Position = UDim2.new(0.5, 0, 1.5, 0)
+            LoginMain:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5,
+                false)
+            LoginMain.Visible = true
+        end
+
+        function AspectLib:IsRunning()
+            if gethui then
+                return LoginUI.Parent == gethui()
+            else
+                return LoginUI.Parent == game:GetService("CoreGui")
+            end
+        end
+
+        function AspectLib:AddConnection(Signal, Function)
+            if (not AspectLib:IsRunning()) then
+                return
+            end
+            local SignalConnect = Signal:Connect(Function)
+            table.insert(AspectLib.Connections, SignalConnect)
+            return SignalConnect
+        end
+
+        local Attempts = _G.Attempts
+
+        function AspectLib:AttemptHandling()
+            if Attempts >= 5 then
+                local OriginalPosition = LoginMain.Position
+                local Connection
+                local Shaken = 0
+                Connection = RunService.Heartbeat:Connect(function()
+                    local BobbleX = (math.cos(os.clock() * 20) * 0.01)
+                    local BobbleY = math.abs(math.sin(os.clock() * 30) * 0.01)
+                    LoginMain.Position = OriginalPosition + UDim2.new(BobbleX, 0, BobbleY, 0)
+                    Shaken = Shaken + 1
+                    if Shaken >= 20 then
+                        Shaken = 0
+                        Connection:Disconnect()
+                        LoginMain.Position = UDim2.new(0.978, -916, 0.396, 94)
+                    end
+                end)
+
+                TooManyAttempts()
+
+                game.Players.LocalPlayer:Kick("Login attempts exceeded. Account on 1hr cooldown. Apologies for inconvenience. Safety and security of Aspect Hub is our top priority.")
+                task.wait(300)
+                game:Shutdown()
+            else
+                Attempts = Attempts + 1
+
+                local OriginalPosition = LoginMain.Position
+                local Connection
+                local Shaken = 0
+                Connection = RunService.Heartbeat:Connect(function()
+                    local BobbleX = (math.cos(os.clock() * 20) * 0.01)
+                    local BobbleY = math.abs(math.sin(os.clock() * 30) * 0.01)
+                    LoginMain.Position = OriginalPosition + UDim2.new(BobbleX, 0, BobbleY, 0)
+                    Shaken = Shaken + 1
+                    if Shaken >= 20 then
+                        Shaken = 0
+                        Connection:Disconnect()
+                        LoginMain.Position = UDim2.new(0.978, -916, 0.396, 94)
+                    end
+                end)
+            end
+        end
+
+        local db = false
+
+        AspectLib:AddConnection(LoginMain.LoginS.Frame.TextButton.MouseButton1Click, function()
+            if db == false then
+                db = true
+                local username = LoginMain.LoginN.Frame.TextBox.Text
+                local password = LoginMain.LoginP.Frame.TextBox.Text
+
+                if AspectLib:ValidString(username) then
+                    if AspectLib:ValidString(password) then
+                        local CheckKey = CheckKey(username, password)
+                        if CheckKey == true then
+                            LoginSettings.Username = username
+                            LoginSettings.Password = password
+                            handleLogin(false)
+
+                            LoginMain:TweenPosition(UDim2.new(0.5, 0, 1.5, 0), Enum.EasingDirection.Out,
+                                Enum.EasingStyle.Sine, 0.5, false)
+                            task.wait(1)
+                            LoginUI:Destroy()
+
+                            if Games[game.GameId] ~= nil then
+                                local GameTable = Games[game.GameId]
+                                local ScriptName = GameTable["ScriptName"]
+                                local ScriptString = GameTable["ScriptString"]
+
+                                if ScriptString ~= nil then
+                                    _G.Username = username
+                                    _G.Password = password
+                                    loadstring(game:HttpGet(ScriptString))()
+                                end
+                            else
+                                game.Players.LocalPlayer:Kick("Game not supported!")
+                            end
+                        else
+                            print("Incorrect Key")
+                            AspectLib:AttemptHandling()
+                        end
+                    else
+                        AspectLib:AttemptHandling()
+                    end
+                else
+                    AspectLib:AttemptHandling()
+                end
+                task.wait(1)
+                db = false
+            end
+        end)
+
+        AspectLib:AddConnection(LoginMain.LoginF.Frame.TextButton.MouseButton1Click, function()
+            if db == false then
+                db = true
+                local username = LoginMain.LoginN.Frame.TextBox.Text
+                local password = LoginMain.LoginP.Frame.TextBox.Text
+                username = ""
+                password = ""
+                local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/DesyncDeveloper/Aspect-Hub/main/Orion-v2')))()
+                spawn(function()
+                    OrionLib:MakeNotification({
+                        Name = "Forgot Login",
+                        Image = "rbxassetid://7733965118",
+                        Content = "Aspect Hub's Discord bot will send you your login information via direct message. For additional support, please join our official Aspect Hub Discord server at discord.gg/AspectHub. We are committed to providing you with the highest quality service and support, and we look forward to assisting you with any questions or concerns you may have. Thank you for choosing Aspect Hub.",
+                        Time = 25
+                    })
+
+                    forgotLogin()
+                end)
+                task.wait(1)
+                db = false
+            end
+        end)
+    end
+end)()
+
+if debug_mode == false then
+    if _G.execCount_AspectHub == nil then
+        _G.execCount_AspectHub = 0
+    end
+
+    if _G.Attempts == nil then
+        _G.Attempts = 0
+    end
+
+    if _G.execCount_AspectHub > 1 then
+        game.Players.LocalPlayer:Kick("Already Executed!")
+    end
+end
+
+local checkGroup = getInGroup()
+
+if checkGroup == true then
+    if Games[game.GameId] ~= nil then
+        login()
+    else
+        print("Game not supported!")
+        task.wait(5)
+        game.Players.LocalPlayer:Kick("Game not supported!")
+    end
+else
+    print("You must be in the Roblox group to continue!")
+    task.wait(5)
+    setclipboard("https://www.roblox.com/groups/16528378/Aspect")
+    game.Players.LocalPlayer:Kick("You must be in the Roblox group to continue!")
+end
+
+_G.execCount = nil;

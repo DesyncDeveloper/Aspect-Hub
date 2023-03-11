@@ -130,6 +130,15 @@ local function MakeDraggable(DragPoint, Main)
 	end)
 end    
 
+
+local function PackColor(Color)
+	return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
+end    
+
+local function UnpackColor(Color)
+	return Color3.fromRGB(Color.R, Color.G, Color.B)
+end
+
 local function LoadCfg(Config)
 	local Data = HttpService:JSONDecode(Config)
 	table.foreach(Data, function(a,b)
@@ -247,14 +256,6 @@ local function SetTheme()
 			Object[ReturnProperty(Object)] = OrionLibV3.Themes[OrionLibV3.SelectedTheme][Name]
 		end    
 	end    
-end
-
-local function PackColor(Color)
-	return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
-end    
-
-local function UnpackColor(Color)
-	return Color3.fromRGB(Color.R, Color.G, Color.B)
 end
 
 CreateElement("Corner", function(Scale, Offset)

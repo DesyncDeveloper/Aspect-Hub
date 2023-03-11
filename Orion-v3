@@ -414,35 +414,136 @@ function OrionLibV3:MakeWindow(WindowConfig)
 			makefolder(WindowConfig.ConfigFolder)
 		end	
 	end
-	
+
 	local TabHolder = AspectHub.Frame.TabHolder.ScrollingFrame
-	
+
 	local DragPoint = AspectHub.Frame.TobBarFrame
-	
+
 	local WindowName = AspectHub.Frame.TopBar.TextLabel
-	
+
 	local MainWindow = AspectHub.Frame
-	
+
 	WindowName.Text = WindowConfig.Name
-	
+
 	MakeDraggable(DragPoint, MainWindow)
-	
+
 	AspectHub.Enabled = false
 	MainWindow.Visible = false
-	
+
 	AddConnection(UserInputService.InputBegan, function(Input)
 		if Input.KeyCode == Enum.KeyCode.RightShift and UIHidden then
 			MainWindow.Visible = true
 		end
 	end)
-	
+
 	AspectHub.Enabled = true
-	
+
 	MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
 	MainWindow.Visible = false
 	MainWindow.Position = UDim2.new(0.5,0,1.5,0)
 	MainWindow:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, false)
 	MainWindow.Visible = true
+
+
+	local TabFunction = {}
+	function TabFunction:MakeTab(TabConfig)
+		TabConfig = TabConfig or {}
+		TabConfig.Name = TabConfig.Name or "Tab"
+		TabConfig.Icon = TabConfig.Icon or ""
+
+		local TabFrame = MainWindow.TabHolder
+		local Container = MainWindow.ItemContainer:Clone()
+
+		local TabButton = TabFrame.ScrollingFrame:WaitForChild("Template"):Clone()
+
+		coroutine.wrap(function()
+			for i, v in pairs(TabFrame.ScrollingFrame:GetChildren()) do
+				if v:IsA("Frame") then
+					if v.Name == "Template" then
+						v:Destroy()
+					end
+				end
+			end
+		end)()
+
+		Container.Visible = false
+		Container.Parent = MainWindow
+
+		AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
+		end)
+
+		if FirstTab then
+			FirstTab = false
+			TabButton.Name = TabConfig.Name
+			TabButton.Visible = true
+			TabButton.Title.Text = TabConfig.Name
+			Container.Visible = true
+		end
+		
+		TabButton.Parent = TabFrame
+
+		AddConnection(TabButton.Interact.MouseButton1Click, function()
+			for _, Tab in next, TabHolder:GetChildren() do
+				if Tab:IsA("Frame") and Tab.Name ~= "Placeholder" then
+					Tab.Title.Font = Enum.Font.GothamSemibold
+					TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0.4}):Play()
+					TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0.4}):Play()
+				end    
+			end
+			for _, ItemContainer in next, MainWindow:GetChildren() do
+				if ItemContainer.Name == "ItemContainer" then
+					ItemContainer.Visible = false
+				end    
+			end  
+			TweenService:Create(TabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+			TweenService:Create(TabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+			TabFrame.Title.Font = Enum.Font.GothamBlack
+			Container.Visible = true   
+		end)
+
+		local function GetElements(ItemParent)
+			local ElementFunction = {}
+			function ElementFunction:AddLabel(Text)
+				local LabelFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+					Size = UDim2.new(1, 0, 0, 30),
+					BackgroundTransparency = 0.7,
+					Parent = ItemParent
+				}), {
+					AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
+						Size = UDim2.new(1, -12, 1, 0),
+						Position = UDim2.new(0, 12, 0, 0),
+						Font = Enum.Font.GothamBold,
+						Name = "Content"
+					}), "Text"),
+					AddThemeObject(MakeElement("Stroke"), "Stroke")
+				}), "Second")
+
+				local LabelFunction = {}
+				function LabelFunction:Set(ToChange)
+					LabelFrame.Content.Text = ToChange
+				end
+				return LabelFunction
+			end
+			return ElementFunction   
+		end	
+		
+		local ElementFunction = {}
+
+		function ElementFunction:AddSection(SectionConfig)
+			local SectionFunction = {}
+			for i, v in next, GetElements(Container) do
+				SectionFunction[i] = v 
+			end
+			return SectionFunction
+		end
+		
+		for i, v in next, GetElements(Container) do
+			ElementFunction[i] = v 
+		end
+		return ElementFunction
+	end
+	return TabFunction
 end
 
 

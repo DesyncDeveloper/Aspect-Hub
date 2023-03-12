@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
-local AspectHub = game:GetObjects("rbxassetid://12758497770")[1]
+local AspectHub = game:GetObjects("rbxassetid://12758552890")[1]
 
 coroutine.wrap(function()
 	for i, v in pairs(CoreGui:GetChildren()) do
@@ -1083,7 +1083,6 @@ function OrionLibV3:MakeWindow(WindowConfig)
 				}), "Second")
 
 				AddConnection(BindBox.Value:GetPropertyChangedSignal("Text"), function()
-					--BindBox.Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)
 					TweenService:Create(BindBox, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)}):Play()
 				end)
 
@@ -1209,7 +1208,6 @@ function OrionLibV3:MakeWindow(WindowConfig)
 				}), "Second")
 
 				AddConnection(TextboxActual:GetPropertyChangedSignal("Text"), function()
-					--TextContainer.Size = UDim2.new(0, TextboxActual.TextBounds.X + 16, 0, 24)
 					TweenService:Create(TextContainer, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, TextboxActual.TextBounds.X + 16, 0, 24)}):Play()
 				end)
 

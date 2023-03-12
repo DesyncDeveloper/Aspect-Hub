@@ -594,6 +594,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 			TabButton.Visible = true
 			TabButton.Title.Text = TabConfig.Name
 			Container.Visible = true
+			TabButton.Parent = TabFrame
 		else
 			TabButton.Name = TabConfig.Name
 			TabButton.Visible = true

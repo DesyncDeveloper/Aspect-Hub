@@ -511,13 +511,52 @@ function OrionLibV3:MakeWindow(WindowConfig)
 
 	AddConnection(UserInputService.InputBegan, function(Input)
 		if Input.KeyCode == Enum.KeyCode.RightShift then
-			if MainWindow.Visible then
-				MainWindow.Visible = false
+			if not MainWindow.Visible then
+				coroutine.wrap(function()
+					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
+						if Descendant:IsA("GuiObject") then
+							if Descendant.BackgroundTransparency > 1 then
+								Descendant.BackgroundTransparency = 0
+							end
+						end
+					end
+
+					local TweenService = game:GetService("TweenService")
+					local TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
+					local TweenProperties = {BackgroundTransparency = 1}
+
+					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
+						if Descendant:IsA("GuiObject") and Descendant.BackgroundTransparency > 0 then
+							local Tween = TweenService:Create(Descendant, TweenInfo, TweenProperties)
+							Tween:Play()
+						end
+					end
+				end)()
 			else
-				MainWindow.Visible = true
+				coroutine.wrap(function()
+					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
+						if Descendant:IsA("GuiObject") then
+							if Descendant.BackgroundTransparency > 0 then
+								Descendant.BackgroundTransparency = 1
+							end
+						end
+					end
+
+					local TweenService = game:GetService("TweenService")
+					local TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
+					local TweenProperties = {BackgroundTransparency = 0}
+
+					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
+						if Descendant:IsA("GuiObject") and Descendant.BackgroundTransparency > 0 then
+							local Tween = TweenService:Create(Descendant, TweenInfo, TweenProperties)
+							Tween:Play()
+						end
+					end
+				end)()
 			end
 		end
 	end)
+
 	
 	coroutine.wrap(function()
 		for i, v in pairs(MainWindow.ItemContainer:GetChildren()) do

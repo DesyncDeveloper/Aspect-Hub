@@ -557,17 +557,14 @@ function OrionLibV3:MakeWindow(WindowConfig)
 		return restoreTransparency
 	end
 
-	-- example usage
-	local mainWindow = game.Workspace.MainWindow
-
 	local fadeIn = true
-	local restoreTransparency = bulkFade(mainWindow, fadeIn)
+	local restoreTransparency = bulkFade(MainWindow, fadeIn)
 
 	AddConnection(UserInputService.InputBegan, function(Input, GameProcessedEvent)
 		if Input.KeyCode == Enum.KeyCode.RightShift and not GameProcessedEvent then
 			fadeIn = not fadeIn
 			restoreTransparency()
-			restoreTransparency = bulkFade(mainWindow, fadeIn)
+			restoreTransparency = bulkFade(MainWindow, fadeIn)
 		end
 	end)
 

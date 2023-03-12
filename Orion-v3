@@ -70,15 +70,36 @@ local function GetIcon(IconName)
 	end
 end   
 
+local Orion = Instance.new("ScreenGui")
+Orion.Name = "Orion"
+if syn then
+	syn.protect_gui(Orion)
+	Orion.Parent = game.CoreGui
+else
+	Orion.Parent = gethui() or game.CoreGui
+end
 
-local Mouse = LocalPlayer:GetMouse()
+if gethui then
+	for _, Interface in ipairs(gethui():GetChildren()) do
+		if Interface.Name == Orion.Name and Interface ~= Orion then
+			Interface:Destroy()
+		end
+	end
+else
+	for _, Interface in ipairs(game.CoreGui:GetChildren()) do
+		if Interface.Name == Orion.Name and Interface ~= Orion then
+			Interface:Destroy()
+		end
+	end
+end
 
 function OrionLibV3:IsRunning()
 	if gethui then
-		return AspectHub.Parent == gethui()
+		return Orion.Parent == gethui()
 	else
-		return AspectHub.Parent == game:GetService("CoreGui")
+		return Orion.Parent == game:GetService("CoreGui")
 	end
+
 end
 
 local function AddConnection(Signal, Function)
@@ -124,62 +145,12 @@ local function MakeDraggable(DragPoint, Main)
 		AddConnection(UserInputService.InputChanged, function(Input)
 			if Input == DragInput and Dragging then
 				local Delta = Input.Position - MousePos
+				--TweenService:Create(Main, TweenInfo.new(0.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
 				Main.Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)
 			end
 		end)
 	end)
 end    
-
-
-local function PackColor(Color)
-	return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
-end    
-
-local function UnpackColor(Color)
-	return Color3.fromRGB(Color.R, Color.G, Color.B)
-end
-
-local function LoadCfg(Config)
-	local Data = HttpService:JSONDecode(Config)
-	table.foreach(Data, function(a,b)
-		if OrionLibV3.Flags[a] then
-			spawn(function() 
-				if OrionLibV3.Flags[a].Type == "Colorpicker" then
-					OrionLibV3.Flags[a]:Set(UnpackColor(b))
-				else
-					OrionLibV3.Flags[a]:Set(b)
-				end    
-			end)
-		else
-			warn("Orion Library Config Loader - Could not find ", a ,b)
-		end
-	end)
-end
-
-local function SaveCfg(Name)
-	local Data = {}
-	for i,v in pairs(OrionLibV3.Flags) do
-		if v.Save then
-			if v.Type == "Colorpicker" then
-				Data[i] = PackColor(v.Value)
-			else
-				Data[i] = v.Value
-			end
-		end	
-	end
-	--writefile(OrionLibV3.Folder .. "/" .. Name .. ".txt", tostring(HttpService:JSONEncode(Data)))
-end
-
-local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
-local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Up,Enum.KeyCode.Left,Enum.KeyCode.Down,Enum.KeyCode.Right,Enum.KeyCode.Slash,Enum.KeyCode.Tab,Enum.KeyCode.Backspace,Enum.KeyCode.Escape}
-
-local function CheckKey(Table, Key)
-	for _, v in next, Table do
-		if v == Key then
-			return true
-		end
-	end
-end
 
 local function Create(Name, Properties, Children)
 	local Object = Instance.new(Name)
@@ -256,6 +227,56 @@ local function SetTheme()
 			Object[ReturnProperty(Object)] = OrionLibV3.Themes[OrionLibV3.SelectedTheme][Name]
 		end    
 	end    
+end
+
+local function PackColor(Color)
+	return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
+end    
+
+local function UnpackColor(Color)
+	return Color3.fromRGB(Color.R, Color.G, Color.B)
+end
+
+local function LoadCfg(Config)
+	local Data = HttpService:JSONDecode(Config)
+	table.foreach(Data, function(a,b)
+		if OrionLibV3.Flags[a] then
+			spawn(function() 
+				if OrionLibV3.Flags[a].Type == "Colorpicker" then
+					OrionLibV3.Flags[a]:Set(UnpackColor(b))
+				else
+					OrionLibV3.Flags[a]:Set(b)
+				end    
+			end)
+		else
+			warn("Orion Library Config Loader - Could not find ", a ,b)
+		end
+	end)
+end
+
+local function SaveCfg(Name)
+	local Data = {}
+	for i,v in pairs(OrionLibV3.Flags) do
+		if v.Save then
+			if v.Type == "Colorpicker" then
+				Data[i] = PackColor(v.Value)
+			else
+				Data[i] = v.Value
+			end
+		end	
+	end
+	writefile(OrionLibV3.Folder .. "/" .. Name .. ".txt", tostring(HttpService:JSONEncode(Data)))
+end
+
+local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
+local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Up,Enum.KeyCode.Left,Enum.KeyCode.Down,Enum.KeyCode.Right,Enum.KeyCode.Slash,Enum.KeyCode.Tab,Enum.KeyCode.Backspace,Enum.KeyCode.Escape}
+
+local function CheckKey(Table, Key)
+	for _, v in next, Table do
+		if v == Key then
+			return true
+		end
+	end
 end
 
 CreateElement("Corner", function(Scale, Offset)
@@ -388,7 +409,7 @@ local NotificationHolder = SetProps(SetChildren(MakeElement("TFrame"), {
 	Position = UDim2.new(1, -25, 1, -25),
 	Size = UDim2.new(0, 300, 1, -25),
 	AnchorPoint = Vector2.new(1, 1),
-	Parent = AspectHub
+	Parent = Orion
 })
 
 function OrionLibV3:MakeNotification(NotificationConfig)
@@ -451,6 +472,21 @@ function OrionLibV3:MakeNotification(NotificationConfig)
 		NotificationFrame:Destroy()
 	end)
 end    
+
+function OrionLibV3:Init()
+	if OrionLibV3.SaveCfg then	
+		pcall(function()
+			if isfile(OrionLibV3.Folder .. "/" .. game.GameId .. ".txt") then
+				LoadCfg(readfile(OrionLibV3.Folder .. "/" .. game.GameId .. ".txt"))
+				OrionLibV3:MakeNotification({
+					Name = "Configuration",
+					Content = "Auto-loaded configuration for the game " .. game.GameId .. ".",
+					Time = 5
+				})
+			end
+		end)		
+	end	
+end	
 
 function OrionLibV3:MakeWindow(WindowConfig)
 	local FirstTab = true

@@ -556,7 +556,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 		local Container = MainWindow.ItemContainer:Clone()
 
 		local TabButton = TabFrame.ScrollingFrame:WaitForChild("Template"):Clone()
-		TabButton.Size = UDim2.new(0, 107,0, 30)
+		TabButton.Size = UDim2.new(0, 107,0, 18)
 
 		coroutine.wrap(function()
 			for i, v in pairs(TabFrame.ScrollingFrame:GetChildren()) do

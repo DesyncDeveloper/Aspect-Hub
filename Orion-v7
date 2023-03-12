@@ -500,10 +500,12 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	WindowName.Text = WindowConfig.Name
 
 	MakeDraggable(DragPoint, MainWindow)
-
+	
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-		TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.X + 16)
+		print("eee")
+		TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
 	end)
+
 
 	AspectHub.Enabled = false
 	MainWindow.Visible = false

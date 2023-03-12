@@ -496,8 +496,8 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	local TabHolder = MainWindow.TabHolder.ScrollingFrame
 	local DragPoint = MainWindow.TobBarFrame
 	local WindowName = MainWindow.TopBar.TextLabel
-	local PlayerName = MainWindow.TabHolder.PlayerName
-	local PlayerImages = MainWindow.TabHolder.Images
+	local PlayerName = MainWindow.TabHolder.Frame.PlayerName
+	local PlayerImages = MainWindow.TabHolder.Frame.Images
 	
 	
 	PlayerName.Text = LocalPlayer.DisplayName

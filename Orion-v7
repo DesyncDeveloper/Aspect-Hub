@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
-local AspectHub = game:GetObjects("rbxassetid://12758107991")[1]
+local AspectHub = game:GetObjects("rbxassetid://12758497770")[1]
 
 coroutine.wrap(function()
 	for i, v in pairs(CoreGui:GetChildren()) do
@@ -491,22 +491,21 @@ function OrionLibV3:MakeWindow(WindowConfig)
 			makefolder(WindowConfig.ConfigFolder)
 		end	
 	end
-
-	local TabHolder = AspectHub.Frame.TabHolder.ScrollingFrame
-	local DragPoint = AspectHub.Frame.TobBarFrame
-	local WindowName = AspectHub.Frame.TopBar.TextLabel
+	
 	local MainWindow = AspectHub.Frame
-
+	local TabHolder = MainWindow.TabHolder.ScrollingFrame
+	local DragPoint = MainWindow.TobBarFrame
+	local WindowName = MainWindow.TopBar.TextLabel
+	local PlayerName = MainWindow.TabHolder.PlayerName
+	local PlayerImages = MainWindow.TabHolder.Images
+	
+	
+	PlayerName.Text = LocalPlayer.DisplayName
 	WindowName.Text = WindowConfig.Name
+	PlayerImages.Image1.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=".. LocalPlayer.UserId .."&width=420&height=420&format=png"
 
 	MakeDraggable(DragPoint, MainWindow)
 	
-	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-		print("eee")
-		--TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
-	end)
-
-
 	AspectHub.Enabled = false
 	MainWindow.Visible = false
 

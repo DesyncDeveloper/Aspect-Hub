@@ -508,52 +508,44 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	
 	AspectHub.Enabled = false
 	MainWindow.Visible = false
-
-	AddConnection(UserInputService.InputBegan, function(Input)
-		if Input.KeyCode == Enum.KeyCode.RightShift then
-			if not MainWindow.Visible then
-				coroutine.wrap(function()
-					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
-						if Descendant:IsA("GuiObject") then
-							if Descendant.BackgroundTransparency > 1 then
-								Descendant.BackgroundTransparency = 0
-							end
-						end
-					end
-
-					local TweenService = game:GetService("TweenService")
-					local TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
-					local TweenProperties = {BackgroundTransparency = 1}
-
-					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
-						if Descendant:IsA("GuiObject") and Descendant.BackgroundTransparency > 0 then
-							local Tween = TweenService:Create(Descendant, TweenInfo, TweenProperties)
-							Tween:Play()
-						end
-					end
-				end)()
-			else
-				coroutine.wrap(function()
-					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
-						if Descendant:IsA("GuiObject") then
-							if Descendant.BackgroundTransparency > 0 then
-								Descendant.BackgroundTransparency = 1
-							end
-						end
-					end
-
-					local TweenService = game:GetService("TweenService")
-					local TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
-					local TweenProperties = {BackgroundTransparency = 0}
-
-					for _, Descendant in ipairs(MainWindow:GetDescendants()) do
-						if Descendant:IsA("GuiObject") and Descendant.BackgroundTransparency > 0 then
-							local Tween = TweenService:Create(Descendant, TweenInfo, TweenProperties)
-							Tween:Play()
-						end
-					end
-				end)()
+	
+	-- Function to get all visible states of descendants
+	local function GetDescendantVisibility(root)
+		local visibleStates = {}
+		for _, descendant in ipairs(root:GetDescendants()) do
+			if descendant:IsA("GuiObject") then
+				table.insert(visibleStates, descendant.Visible)
 			end
+		end
+		return visibleStates
+	end
+
+	-- Function to fade in/out the GUI
+	local function FadeGUI()
+		local visible = not MainWindow.Visible
+		local visibleStates = GetDescendantVisibility(MainWindow)
+
+		coroutine.wrap(function()
+			for i, descendant in ipairs(MainWindow:GetDescendants()) do
+				if descendant:IsA("GuiObject") then
+					if visibleStates[i] then
+						descendant.Visible = visible
+					end
+					if descendant.BackgroundTransparency > 0 and descendant.Visible == visible then
+						local TweenService = game:GetService("TweenService")
+						local TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
+						local TweenProperties = {BackgroundTransparency = visible and 0 or 1}
+						local Tween = TweenService:Create(descendant, TweenInfo, TweenProperties)
+						Tween:Play()
+					end
+				end
+			end
+		end)()
+	end
+
+	AddConnection(UserInputService.InputBegan, function(Input, GameProcessedEvent)
+		if Input.KeyCode == Enum.KeyCode.RightShift and not GameProcessedEvent then
+			FadeGUI()
 		end
 	end)
 

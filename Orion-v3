@@ -533,10 +533,22 @@ function OrionLibV3:MakeWindow(WindowConfig)
 
 	AddConnection(UserInputService.InputBegan, function(Input)
 		if Input.KeyCode == Enum.KeyCode.RightShift and UIHidden then
-			MainWindow.Visible = true
+			if MainWindow.Visible then
+				MainWindow.Visible = false
+			else
+				MainWindow.Visible = true
+			end
 		end
 	end)
-
+	
+	coroutine.wrap(function()
+		for i, v in pairs(MainWindow.ItemContainer:GetChildren()) do
+			if v:IsA("Frame") then
+				v:Destroy()
+			end
+		end
+	end)()
+	
 	AspectHub.Enabled = true
 
 	MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -554,18 +566,10 @@ function OrionLibV3:MakeWindow(WindowConfig)
 
 		local TabFrame = MainWindow.TabHolder
 		
-		coroutine.wrap(function()
-			for i, v in pairs(MainWindow.ItemContainer:GetChildren()) do
-				if v:IsA("Frame") then
-					v:Destroy()
-				end
-			end
-		end)()
-		
 		local Container = MainWindow.ItemContainer:Clone()
 
 		local TabButton = TabFrame.ScrollingFrame:WaitForChild("Template"):Clone()
-		TabButton.Size = UDim2.new(0, 107,0, 18)
+		TabButton.Size = UDim2.new(0, 107,0, 10)
 
 		coroutine.wrap(function()
 			for i, v in pairs(TabFrame.ScrollingFrame:GetChildren()) do

@@ -503,7 +503,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 		print("eee")
-		TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
+		--TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
 	end)
 
 
@@ -566,12 +566,12 @@ function OrionLibV3:MakeWindow(WindowConfig)
 			TabButton.Visible = true
 			TabButton.Title.Text = TabConfig.Name
 			Container.Visible = true
-			TabButton.Parent = TabFrame
+			TabButton.Parent = TabFrame.ScrollingFrame
 		else
 			TabButton.Name = TabConfig.Name
 			TabButton.Visible = true
 			TabButton.Title.Text = TabConfig.Name
-			TabButton.Parent = TabFrame
+			TabButton.Parent = TabFrame.ScrollingFrame
 		end
 
 		AddConnection(TabButton.Interact.MouseButton1Click, function()

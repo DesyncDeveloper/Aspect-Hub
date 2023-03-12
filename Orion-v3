@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
-local AspectHub = game:GetObjects("rbxassetid://12756185472")[1]
+local AspectHub = game:GetObjects("rbxassetid://12758048581")[1]
 
 coroutine.wrap(function()
 	for i, v in pairs(CoreGui:GetChildren()) do
@@ -532,7 +532,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	MainWindow.Visible = false
 
 	AddConnection(UserInputService.InputBegan, function(Input)
-		if Input.KeyCode == Enum.KeyCode.RightShift and UIHidden then
+		if Input.KeyCode == Enum.KeyCode.RightShift then
 			if MainWindow.Visible then
 				MainWindow.Visible = false
 			else

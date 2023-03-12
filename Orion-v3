@@ -553,6 +553,15 @@ function OrionLibV3:MakeWindow(WindowConfig)
 		TabConfig.Icon = TabConfig.Icon or ""
 
 		local TabFrame = MainWindow.TabHolder
+		
+		coroutine.wrap(function()
+			for i, v in pairs(MainWindow.ItemContainer:GetChildren()) do
+				if v:IsA("Frame") then
+					v:Destroy()
+				end
+			end
+		end)()
+		
 		local Container = MainWindow.ItemContainer:Clone()
 
 		local TabButton = TabFrame.ScrollingFrame:WaitForChild("Template"):Clone()
@@ -564,14 +573,6 @@ function OrionLibV3:MakeWindow(WindowConfig)
 					if v.Name == "Template" then
 						v:Destroy()
 					end
-				end
-			end
-		end)()
-		
-		coroutine.wrap(function()
-			for i, v in pairs(Container:GetChildren()) do
-				if v:IsA("Frame") then
-					v:Destroy()
 				end
 			end
 		end)()

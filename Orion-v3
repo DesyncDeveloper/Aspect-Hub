@@ -509,18 +509,65 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	AspectHub.Enabled = false
 	MainWindow.Visible = false
 	
-	local BulkFade = loadstring(game:HttpGet(('https://raw.githubusercontent.com/kingerman88/Bulkfade/main/BulkFade.lua')))()
-	local Group = BulkFade.CreateGroup(MainWindow:GetDescendants(), TweenInfo.new(.5))
+	local TweenService = game:GetService("TweenService")
+	local UserInputService = game:GetService("UserInputService")
+
+	-- function to recursively get descendants of an object
+	local function getDescendants(parent, descendants)
+		descendants = descendants or {}
+		for _, child in ipairs(parent:GetChildren()) do
+			table.insert(descendants, child)
+			getDescendants(child, descendants)
+		end
+		return descendants
+	end
+
+	-- function to fade GUI in or out
+	local function bulkFade(gui, fadeIn)
+		local originalTransparency = {}
+		local descendants = getDescendants(gui)
+
+		-- save original transparency values
+		for _, descendant in ipairs(descendants) do
+			if descendant:IsA("GuiObject") then
+				originalTransparency[descendant] = descendant.BackgroundTransparency
+			end
+		end
+
+		-- fade in/out
+		local endTransparency = fadeIn and 0 or 1
+		for _, descendant in ipairs(descendants) do
+			if descendant:IsA("GuiObject") then
+				local startTransparency = originalTransparency[descendant]
+				if startTransparency ~= endTransparency then
+					local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+					local tweenProps = {BackgroundTransparency = endTransparency}
+					local tween = TweenService:Create(descendant, tweenInfo, tweenProps)
+					tween:Play()
+				end
+			end
+		end
+
+		-- restore original transparency values
+		local restoreTransparency = function()
+			for descendant, transparency in pairs(originalTransparency) do
+				descendant.BackgroundTransparency = transparency
+			end
+		end
+		return restoreTransparency
+	end
+
+	-- example usage
+	local mainWindow = game.Workspace.MainWindow
+
+	local fadeIn = true
+	local restoreTransparency = bulkFade(mainWindow, fadeIn)
 
 	AddConnection(UserInputService.InputBegan, function(Input, GameProcessedEvent)
 		if Input.KeyCode == Enum.KeyCode.RightShift and not GameProcessedEvent then
-			if MainWindow.Visible then
-				-- set all invis
-				Group:FadeOut()
-			else
-				-- set all vis
-				Group:FadeIn();
-			end
+			fadeIn = not fadeIn
+			restoreTransparency()
+			restoreTransparency = bulkFade(mainWindow, fadeIn)
 		end
 	end)
 

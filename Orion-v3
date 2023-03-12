@@ -588,19 +588,18 @@ function OrionLibV3:MakeWindow(WindowConfig)
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
 		end)
 		
-		print(FirstTab)
 		if FirstTab then
 			FirstTab = false
 			TabButton.Name = TabConfig.Name
 			TabButton.Visible = true
 			TabButton.Title.Text = TabConfig.Name
 			Container.Visible = true
+		else
+			TabButton.Name = TabConfig.Name
+			TabButton.Visible = true
+			TabButton.Title.Text = TabConfig.Name
+			TabButton.Parent = TabFrame
 		end
-
-		TabButton.Name = TabConfig.Name
-		TabButton.Visible = true
-		TabButton.Title.Text = TabConfig.Name
-		TabButton.Parent = TabFrame
 
 		AddConnection(TabButton.Interact.MouseButton1Click, function()
 			for _, Tab in next, TabHolder:GetChildren() do

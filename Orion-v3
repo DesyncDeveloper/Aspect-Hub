@@ -1251,6 +1251,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 			local Container = MainWindow.ItemContainer:Clone()
 
 			Container.Parent = MainWindow
+			Container.Visible = true
 
 			AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 				Container.Size = UDim2.new(1, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 31)

@@ -672,21 +672,24 @@ function OrionLib:MakeWindow(WindowConfig)
 		Minimized = not Minimized    
 	end)
 	
+	MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
+    MainWindow.Visible = false
+    MainWindow.Position = UDim2.new(0.5,0,1.5,0)
+
     local function SetMainWindow()
-        while wait(0.1) do
-            if AspectHubFunctions:IsAspectHubLoading() == false then
-                MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
-                MainWindow.Visible = false
-                MainWindow.Position = UDim2.new(0.5,0,1.5,0)
-                MainWindow:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, false)
-                MainWindow.Visible = true
-                break
-            end
-        end
-    end
-
-    coroutine.resume(coroutine.create(SetMainWindow)) 
-
+		repeat
+			wait(0.1)
+		until AspectHubFunctions:IsAspectHubLoading() == false
+		
+		MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
+		MainWindow.Visible = false
+		MainWindow.Position = UDim2.new(0.5,0,1.5,0)
+		MainWindow:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, false)
+		MainWindow.Visible = true
+	end
+	
+	task.spawn(SetMainWindow)
+	
 	local TabFunction = {}
 	function TabFunction:MakeTab(TabConfig)
 		TabConfig = TabConfig or {}

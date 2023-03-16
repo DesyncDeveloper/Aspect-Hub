@@ -49,7 +49,6 @@ local OrionLibV3 = {
 	},
 	SelectedTheme = "Default",
 	Folder = nil,
-	SaveCfg = false
 }
 
 if _G.AspectHubFunctions == nil then
@@ -232,20 +231,6 @@ local function LoadCfg(Config)
 			warn("Orion Library Config Loader - Could not find ", a ,b)
 		end
 	end)
-end
-
-local function SaveCfg(Name)
-	local Data = {}
-	for i,v in pairs(OrionLibV3.Flags) do
-		if v.Save then
-			if v.Type == "Colorpicker" then
-				Data[i] = PackColor(v.Value)
-			else
-				Data[i] = v.Value
-			end
-		end	
-	end
-	writefile(OrionLibV3.Folder .. "/" .. Name .. ".txt", tostring(HttpService:JSONEncode(Data)))
 end
 
 local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
@@ -454,18 +439,7 @@ function OrionLibV3:MakeNotification(NotificationConfig)
 end    
 
 function OrionLibV3:Init()
-	if OrionLibV3.SaveCfg then	
-		pcall(function()
-			if isfile(OrionLibV3.Folder .. "/" .. game.GameId .. ".txt") then
-				LoadCfg(readfile(OrionLibV3.Folder .. "/" .. game.GameId .. ".txt"))
-				OrionLibV3:MakeNotification({
-					Name = "Configuration",
-					Content = "Auto-loaded configuration for the game " .. game.GameId .. ".",
-					Time = 5
-				})
-			end
-		end)		
-	end	
+	print("Aspect Hub - Orion v3")
 end	
 
 function OrionLibV3:MakeWindow(WindowConfig)
@@ -488,13 +462,6 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	WindowConfig.Icon = WindowConfig.Icon or "rbxassetid://8834748103"
 	WindowConfig.IntroIcon = WindowConfig.IntroIcon or "rbxassetid://8834748103"
 	OrionLibV3.Folder = WindowConfig.ConfigFolder
-	OrionLibV3.SaveCfg = WindowConfig.SaveConfig
-
-	if WindowConfig.SaveConfig then
-		if not isfolder(WindowConfig.ConfigFolder) then
-			makefolder(WindowConfig.ConfigFolder)
-		end	
-	end
 	
 	local MainWindow = AspectHub.Frame
 	local TabHolder = MainWindow.TabHolder.ScrollingFrame
@@ -792,7 +759,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 
 				AddConnection(Click.MouseButton1Up, function()
 					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLibV3.Themes[OrionLibV3.SelectedTheme].Second.R * 255 + 3, OrionLibV3.Themes[OrionLibV3.SelectedTheme].Second.G * 255 + 3, OrionLibV3.Themes[OrionLibV3.SelectedTheme].Second.B * 255 + 3)}):Play()
-					SaveCfg(game.GameId)
+					
 					Toggle:Set(not Toggle.Value)
 				end)
 
@@ -882,7 +849,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 					if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then 
 						local SizeScale = math.clamp((Input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
 						Slider:Set(SliderConfig.Min + ((SliderConfig.Max - SliderConfig.Min) * SizeScale)) 
-						SaveCfg(game.GameId)
+						
 					end
 				end)
 
@@ -995,7 +962,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 
 						AddConnection(OptionBtn.MouseButton1Click, function()
 							Dropdown:Set(Option)
-							SaveCfg(game.GameId)
+							
 						end)
 
 						Dropdown.Buttons[Option] = OptionBtn
@@ -1134,7 +1101,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 						end)
 						Key = Key or Bind.Value
 						Bind:Set(Key)
-						SaveCfg(game.GameId)
+						
 					end
 				end)
 

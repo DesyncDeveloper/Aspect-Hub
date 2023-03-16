@@ -52,6 +52,10 @@ local OrionLibV3 = {
 	SaveCfg = false
 }
 
+if _G.AspectHubFunctions == nil then
+	_G.AspectHubFunctions = loadstring(game:HttpGet(("https://raw.githubusercontent.com/DesyncDeveloper/Aspect-Hub/main/Aspect-Hub-Functions.lua")))()
+end
+
 local Icons = {}
 
 local Success, Response = pcall(function()
@@ -533,10 +537,22 @@ function OrionLibV3:MakeWindow(WindowConfig)
 	AspectHub.Enabled = true
 
 	MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
-	MainWindow.Visible = false
-	MainWindow.Position = UDim2.new(0.5,0,1.5,0)
-	MainWindow:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, false)
-	MainWindow.Visible = true
+    MainWindow.Visible = false
+    MainWindow.Position = UDim2.new(0.5,0,1.5,0)
+
+    local function SetMainWindow()
+		repeat
+			wait(0.1)
+		until AspectHubFunctions:IsAspectHubLoading() == false
+		
+		MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
+		MainWindow.Visible = false
+		MainWindow.Position = UDim2.new(0.5,0,1.5,0)
+		MainWindow:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, false)
+		MainWindow.Visible = true
+	end
+	
+	task.spawn(SetMainWindow)
 
 
 	local TabFunction = {}

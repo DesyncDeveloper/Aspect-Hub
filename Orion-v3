@@ -508,6 +508,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
     MainWindow.Position = UDim2.new(0.5,0,1.5,0)
 
     local function SetMainWindow()
+		print("O222MG")
 		repeat
 			wait(0.1)
 		until AspectHubFunctions:IsAspectHubLoading() == false
@@ -519,6 +520,7 @@ function OrionLibV3:MakeWindow(WindowConfig)
 		MainWindow.Visible = true
 	end
 	
+	print("OMG")
 	task.spawn(SetMainWindow)
 
 

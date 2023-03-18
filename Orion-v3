@@ -55,6 +55,8 @@ if _G.AspectHubFunctions == nil then
 	_G.AspectHubFunctions = loadstring(game:HttpGet(("https://raw.githubusercontent.com/DesyncDeveloper/Aspect-Hub/main/Aspect-Hub-Functions.lua")))()
 end
 
+local AspectHubFunctions = _G.AspectHubFunctions
+
 local Icons = {}
 
 local Success, Response = pcall(function()

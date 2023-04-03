@@ -1,13 +1,13 @@
 local updateLog = {
     {
-        updateName = "Example Update",
+        updateName = "Pet Simulator X | Fruit Farm",
         version = "1.0",
-        description = "Added new feature X and improved feature Y."
+        description = "Added new feature Fruit Farm."
     },
     {
-        updateName = "Another Update",
-        version = "1.1",
-        description = "Fixed bug Z and added option to customize colors."
+        updateName = "Pet Simulator X | Comet Farm",
+        version = "1.0",
+        description = "Added new feature Comet Farm.."
     },
 }
 

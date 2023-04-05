@@ -906,6 +906,8 @@ function OrionLib:MakeWindow(WindowConfig)
 					ToggleConfig.Callback(Toggle.Value)
 				end    
 
+				print("Not even touch and here.")
+				print(Toggle.Value)
 				Toggle:Set(Toggle.Value)
 
 				AddConnection(Click.MouseEnter, function()

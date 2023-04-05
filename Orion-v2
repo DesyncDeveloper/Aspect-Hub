@@ -1015,15 +1015,20 @@ function OrionLib:MakeWindow(WindowConfig)
 					end
 				end)
 
-				function Slider:Set(Value)
+				function Slider:Set(Value, DoCallBack)
 					self.Value = math.clamp(Round(Value, SliderConfig.Increment), SliderConfig.Min, SliderConfig.Max)
 					TweenService:Create(SliderDrag,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = UDim2.fromScale((self.Value - SliderConfig.Min) / (SliderConfig.Max - SliderConfig.Min), 1)}):Play()
 					SliderBar.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
 					SliderDrag.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
-					SliderConfig.Callback(self.Value)
+
+					if DoCallBack == true or DoCallBack == nil then
+						print("lol 2")
+						SliderConfig.Callback(self.Value)
+					end
 				end      
 
-				Slider:Set(Slider.Value)
+				Slider:Set(Slider.Value, false)
+
 				if SliderConfig.Flag then				
 					OrionLib.Flags[SliderConfig.Flag] = Slider
 				end
@@ -1124,7 +1129,6 @@ function OrionLib:MakeWindow(WindowConfig)
 
 						AddConnection(OptionBtn.MouseButton1Click, function()
 							Dropdown:Set(Option)
-							
 						end)
 
 						Dropdown.Buttons[Option] = OptionBtn
@@ -1163,6 +1167,7 @@ function OrionLib:MakeWindow(WindowConfig)
 					end	
 					TweenService:Create(Dropdown.Buttons[Value],TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
 					TweenService:Create(Dropdown.Buttons[Value].Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play()
+
 					return DropdownConfig.Callback(Dropdown.Value)
 				end
 

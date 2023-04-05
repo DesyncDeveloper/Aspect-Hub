@@ -904,7 +904,6 @@ function OrionLib:MakeWindow(WindowConfig)
 					TweenService:Create(ToggleBox.Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Color = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Stroke}):Play()
 					TweenService:Create(ToggleBox.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1, Size = Toggle.Value and UDim2.new(0, 20, 0, 20) or UDim2.new(0, 8, 0, 8)}):Play()
 					if DoCallBack == true or DoCallBack == nil then
-						print("lol")
 						ToggleConfig.Callback(Toggle.Value)
 					end
 				end    
@@ -1022,7 +1021,6 @@ function OrionLib:MakeWindow(WindowConfig)
 					SliderDrag.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
 
 					if DoCallBack == true or DoCallBack == nil then
-						print("lol 2")
 						SliderConfig.Callback(self.Value)
 					end
 				end      

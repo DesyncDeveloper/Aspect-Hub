@@ -2,7 +2,7 @@ local updateLog = {
     {
         updateName = "Bubble Gum Simulator | Added Fake Hatch",
         version = "1.0",
-        description = "Fake Hatch has arrived, Hatch any egg and pet anywhere with a message in chat replicating the real thing!, Visual Only."
+        description = "Introducing Fake Hatch - the newest feature in Bubble Gum Simulator - Aspect Hub! With Fake Hatch, you can hatch any egg and pet anywhere in the game, and see a message in chat that replicates the real thing. This feature is purely visual and adds a fun element to your Aspect Hub experience."
     },
     {
         updateName = "Bubble Gum Simulator | Added Confirmation Screen",
